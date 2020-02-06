@@ -8,7 +8,7 @@ import numpy.random as npr
 # DO NOT CHANGE THE SIGNATURES OF ANY DEFINED FUNCTIONS.
 # YOU CAN ADD "HELPER" FUNCTIONS IF YOU LIKE.
 
-def part1_load(folder1, folder2):
+def part1_load(folder1, folder2, n=1):
     # CHANGE WHATEVER YOU WANT *INSIDE* THIS FUNCTION.
     return pd.DataFrame(npr.randn(2,2)) # DUMMY RETURN
 
