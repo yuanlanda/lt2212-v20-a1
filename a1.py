@@ -10,7 +10,6 @@ import numpy.random as npr
 # YOU CAN ADD "HELPER" FUNCTIONS IF YOU LIKE.
 
 def part1_load(folder1, folder2, n=1):
-    # CHANGE WHATEVER YOU WANT *INSIDE* THIS FUNCTION.
     file1_path = glob("{}/*.txt".format(folder1))
     file2_path = glob("{}/*.txt".format(folder2))
 
@@ -47,7 +46,7 @@ def part1_load(folder1, folder2, n=1):
             else:
                 word_count_list.append(0)
 
-        word_count_list.insert(0, filename[2:len(folder1)])
+        word_count_list.insert(0, filename[0:len(folder1)])
         word_count_list.insert(0, filename[len(folder1)+1:])
 
         file_word_list.append(word_count_list)
@@ -57,7 +56,7 @@ def part1_load(folder1, folder2, n=1):
 
     df = pd.DataFrame(columns=total_words, data=file_word_list)
     print(df)
-    return pd.DataFrame(npr.randn(2,2)) # DUMMY RETURN
+    return df
 
 def part2_vis(df):
     # DO NOT CHANGE
@@ -76,4 +75,4 @@ def part3_tfidf(df):
 
 # ADD WHATEVER YOU NEED HERE, INCLUDING BONUS CODE.
 if __name__ == '__main__':
-    part1_load('./crude', './grain')
+    part1_load('crude', 'grain')
