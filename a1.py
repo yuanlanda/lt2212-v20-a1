@@ -51,19 +51,28 @@ def part1_load(folder1, folder2, n=1):
 
         file_word_list.append(word_count_list)
 
-    total_words.insert(0,'Class')
-    total_words.insert(0,'File Name')
+    total_words.insert(0,'classname')
+    total_words.insert(0,'file name')
 
     df = pd.DataFrame(columns=total_words, data=file_word_list)
-    print(df)
     return df
 
-def part2_vis(df):
+def part2_vis(df, m):
     # DO NOT CHANGE
     assert isinstance(df, pd.DataFrame)
 
-    # CHANGE WHAT YOU WANT HERE
-    return df.plot(kind="bar")
+    class_list = df['classname'].unique()
+
+    df1 = df.loc[df['classname'] == class_list[0]]
+    df2 = df.loc[df['classname'] == class_list[1]]
+
+    df1_sum = df1.iloc[: , 2:].sum(axis = 0, skipna = True)
+    df2_sum = df2.iloc[: , 2:].sum(axis = 0, skipna = True) 
+
+    df_plot = pd.DataFrame({class_list[0]:df1_sum, class_list[1]:df2_sum}, columns=class_list)
+
+    df_plot_sort = df_plot.sort_values(by=class_list[1], ascending=False).iloc[0:m , : ]
+    return df_plot_sort.plot(kind='bar')
 
 def part3_tfidf(df):
     # DO NOT CHANGE
@@ -75,4 +84,5 @@ def part3_tfidf(df):
 
 # ADD WHATEVER YOU NEED HERE, INCLUDING BONUS CODE.
 if __name__ == '__main__':
-    part1_load('crude', 'grain')
+    df = part1_load('crude', 'grain')
+    part2_vis(df)
