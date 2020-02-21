@@ -57,7 +57,7 @@ def part1_load(folder1, folder2, n=1):
     df = pd.DataFrame(columns=total_words, data=file_word_list)
     return df
 
-def part2_vis(df, m):
+def part2_vis(df, m=10):
     # DO NOT CHANGE
     assert isinstance(df, pd.DataFrame)
 
@@ -74,15 +74,40 @@ def part2_vis(df, m):
     df_plot_sort = df_plot.sort_values(by=class_list[1], ascending=False).iloc[0:m , : ]
     return df_plot_sort.plot(kind='bar')
 
+
 def part3_tfidf(df):
     # DO NOT CHANGE
     assert isinstance(df, pd.DataFrame)
 
-    # CHANGE WHAT YOU WANT HERE
-    return df #DUMMY RETURN
+    df_sum = df.iloc[: , 2:].sum(axis = 0, skipna = True)
+    total_word_count = df_sum.sum(axis = 0, skipna = True)
+
+    word_occcur_times = []
+    for row in df.iloc[: , 2:]:
+        count = 0
+        for i in df[row]:
+            if i > 0:
+                count +=1
+        word_occcur_times.append(count)
+
+    tf = []
+    idf = []
+    for w in range(0, len(df_sum)):
+        tf.append(df_sum[w]/total_word_count)
+        idf.append(np.log(df.shape[0]/(word_occcur_times[w])))
+
+    tf_idf = []
+    for i in range(0, len(tf)):
+        tf_idf.append(tf[i]*idf[i])
+
+    tf_idf_df = pd.DataFrame({'term':df.columns[2:], 'tf_idf':tf_idf})
+    print(tf_idf_df)
+
+    return tf_idf_df
 
 
 # ADD WHATEVER YOU NEED HERE, INCLUDING BONUS CODE.
 if __name__ == '__main__':
     df = part1_load('crude', 'grain')
     part2_vis(df)
+    part3_tfidf(df)
