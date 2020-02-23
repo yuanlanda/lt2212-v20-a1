@@ -13,8 +13,8 @@ def part1_load(folder1, folder2, n=1):
     file1_path = glob("{}/*.txt".format(folder1))
     file2_path = glob("{}/*.txt".format(folder2))
 
+    #collect all the words from corpus
     file_path = file1_path + file2_path
-
     total_words = []
     for filename in file_path:
         with open(filename, "r") as thefile:
@@ -25,7 +25,7 @@ def part1_load(folder1, folder2, n=1):
                     if word not in total_words:
                         total_words.append(word)
 
-
+    # count number of words occurred in each document
     file_word_list = []
     for filename in file_path:
         word_count_dict = {}
@@ -52,7 +52,7 @@ def part1_load(folder1, folder2, n=1):
         file_word_list.append(word_count_list)
 
     total_words.insert(0,'classname')
-    total_words.insert(0,'file name')
+    total_words.insert(0,'filename')
 
     df = pd.DataFrame(columns=total_words, data=file_word_list)
     return df
@@ -79,29 +79,12 @@ def part3_tfidf(df):
     # DO NOT CHANGE
     assert isinstance(df, pd.DataFrame)
 
-    df_sum = df.iloc[: , 2:].sum(axis = 0, skipna = True)
-    total_word_count = df_sum.sum(axis = 0, skipna = True)
+    not_zero_docs = df.iloc[: , 2:].astype(bool).sum(axis=0)
+    idf = np.log((df.shape[0]/not_zero_docs))
+    tf_idf_df = df.iloc[: , 2:].mul(idf, axis=1)
 
-    word_occcur_times = []
-    for row in df.iloc[: , 2:]:
-        count = 0
-        for i in df[row]:
-            if i > 0:
-                count +=1
-        word_occcur_times.append(count)
-
-    tf = []
-    idf = []
-    for w in range(0, len(df_sum)):
-        tf.append(df_sum[w]/total_word_count)
-        idf.append(np.log(df.shape[0]/(word_occcur_times[w])))
-
-    tf_idf = []
-    for i in range(0, len(tf)):
-        tf_idf.append(tf[i]*idf[i])
-
-    tf_idf_df = pd.DataFrame({'term':df.columns[2:], 'tf_idf':tf_idf})
-    print(tf_idf_df)
+    tf_idf_df.insert(0, "classname", df['classname'])
+    tf_idf_df.insert(0, "filename", df['filename'])
 
     return tf_idf_df
 
