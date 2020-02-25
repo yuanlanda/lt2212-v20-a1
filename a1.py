@@ -4,10 +4,16 @@ from glob import glob
 import pandas as pd
 import numpy as np
 import numpy.random as npr
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix,accuracy_score,classification_report
 # ADD ANY OTHER IMPORTS YOU LIKE
 
 # DO NOT CHANGE THE SIGNATURES OF ANY DEFINED FUNCTIONS.
 # YOU CAN ADD "HELPER" FUNCTIONS IF YOU LIKE.
+
+CLASS_NAME = 'classname'
+FILE_NAME = 'filename'
 
 def part1_load(folder1, folder2, n=1):
     file1_path = glob("{}/*.txt".format(folder1))
@@ -51,8 +57,8 @@ def part1_load(folder1, folder2, n=1):
 
         file_word_list.append(word_count_list)
 
-    total_words.insert(0,'classname')
-    total_words.insert(0,'filename')
+    total_words.insert(0, CLASS_NAME)
+    total_words.insert(0, FILE_NAME)
 
     df = pd.DataFrame(columns=total_words, data=file_word_list)
     return df
@@ -61,10 +67,10 @@ def part2_vis(df, m=10):
     # DO NOT CHANGE
     assert isinstance(df, pd.DataFrame)
 
-    class_list = df['classname'].unique()
+    class_list = df[CLASS_NAME].unique()
 
-    df1 = df.loc[df['classname'] == class_list[0]]
-    df2 = df.loc[df['classname'] == class_list[1]]
+    df1 = df.loc[df[CLASS_NAME] == class_list[0]]
+    df2 = df.loc[df[CLASS_NAME] == class_list[1]]
 
     df1_sum = df1.iloc[: , 2:].sum(axis = 0, skipna = True)
     df2_sum = df2.iloc[: , 2:].sum(axis = 0, skipna = True) 
@@ -83,14 +89,31 @@ def part3_tfidf(df):
     idf = np.log((df.shape[0]/not_zero_docs))
     tf_idf_df = df.iloc[: , 2:].mul(idf, axis=1)
 
-    tf_idf_df.insert(0, "classname", df['classname'])
-    tf_idf_df.insert(0, "filename", df['filename'])
+    tf_idf_df.insert(0, CLASS_NAME, df[CLASS_NAME])
+    tf_idf_df.insert(0, FILE_NAME, df[FILE_NAME])
 
     return tf_idf_df
+
+
+def part_bonus_classify(df):
+    svclassifier = SVC(kernel="linear")
+    x = df.drop([CLASS_NAME, FILE_NAME], 1)
+    y = df[CLASS_NAME]
+    
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.20)
+    svclassifier.fit(x_train, y_train)
+    y_pred = svclassifier.predict(x_test)
+    
+    print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    
+    return accuracy_score(y_test, y_pred)
 
 
 # ADD WHATEVER YOU NEED HERE, INCLUDING BONUS CODE.
 if __name__ == '__main__':
     df = part1_load('crude', 'grain')
     part2_vis(df)
-    part3_tfidf(df)
+    df_tfidf = part3_tfidf(df)
+    part_bonus_classify(df)
+    part_bonus_classify(df_tfidf)

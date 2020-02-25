@@ -1,0 +1,5 @@
+
+# ignore test floders
+crude/
+grain/
+__pycache__/
