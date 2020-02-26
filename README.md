@@ -14,5 +14,5 @@ Compared to the chart in part2, the top 10 term frequences in part 3 has more sp
 
 ## Part Bonus - classify
 
-I chose SVM algorithms as my classifier modle. I read the instrustion [Implementing SVM and Kernel SVM with Python's Scikit-Learn](https://stackabuse.com/implementing-svm-and-kernel-svm-with-pythons-scikit-learn/) as a reference to implement my classifier. The classification accuracy without tf-idf is around 0.9655, while the accuracy with tf-idf is reaching nearly 0.9957. The tf–idf value increases proportionally to the number of times a word appears in the document, therefore the transformed training dataset via tf–idf is better for model to classified.
+I chose SVM algorithms as my classifier modle. I read the instrustion [Implementing SVM and Kernel SVM with Python's Scikit-Learn](https://stackabuse.com/implementing-svm-and-kernel-svm-with-pythons-scikit-learn/) as a reference to implement my classifier. The classification accuracy without tf-idf is around 0.9655, while the accuracy with tf-idf is reaching nearly 0.9957. The tf–idf value increases proportionally to the number of times a word appears in the document, therefore the transformed training dataset via tf–idf is better for model to classify.
 
