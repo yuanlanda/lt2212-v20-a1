@@ -5,4 +5,4 @@ grain/
 
 # ignore other files
 __pycache__/
-.DS_Store
+*.DS_Store
